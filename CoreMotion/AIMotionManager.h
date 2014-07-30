@@ -12,6 +12,8 @@
 
 @interface AIMotionManager : NSObject
 
++ (AIMotionManager *)sharedManager;
+
 @property (assign, nonatomic) double accX;
 @property (assign, nonatomic) double accY;
 @property (assign, nonatomic) double accZ;

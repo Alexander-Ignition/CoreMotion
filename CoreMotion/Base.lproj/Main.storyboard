@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
-        <!--Table View Controller - CoreMotion-->
+        <!--Accel Table View Controller - CoreMotion-->
         <scene sceneID="JQ0-JD-pvh">
             <objects>
-                <tableViewController id="OvK-ts-GR7" customClass="AITableViewController" sceneMemberID="viewController">
+                <tableViewController id="OvK-ts-GR7" customClass="AIAccelTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="4Xg-gS-Tj5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -173,9 +173,15 @@
                         <outlet property="accX" destination="BMI-O1-lHn" id="wYl-Hs-fpJ"/>
                         <outlet property="accY" destination="gEX-mm-wHI" id="1tY-ev-euy"/>
                         <outlet property="accZ" destination="80u-jJ-XOI" id="Ucz-dt-xSu"/>
+                        <outlet property="accelX" destination="BMI-O1-lHn" id="Ijd-Xy-SB9"/>
+                        <outlet property="accelY" destination="gEX-mm-wHI" id="6tl-cF-U3f"/>
+                        <outlet property="accelZ" destination="80u-jJ-XOI" id="uTg-Iu-9IG"/>
                         <outlet property="maxAccX" destination="mcC-Ne-dkX" id="NLN-bb-3gN"/>
                         <outlet property="maxAccY" destination="Xoz-0f-IVF" id="VCr-9y-8KQ"/>
                         <outlet property="maxAccZ" destination="aBJ-5E-bFt" id="wsD-qF-mIk"/>
+                        <outlet property="maxAccelX" destination="mcC-Ne-dkX" id="LaP-Of-2LA"/>
+                        <outlet property="maxAccelY" destination="Xoz-0f-IVF" id="Xci-Ho-7Bh"/>
+                        <outlet property="maxAccelZ" destination="aBJ-5E-bFt" id="1Qu-58-R5s"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TnQ-Ei-rM4" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -186,7 +192,7 @@
         <scene sceneID="Boq-Rk-tMH">
             <objects>
                 <tabBarController definesPresentationContext="YES" id="0DB-5O-X0O" sceneMemberID="viewController">
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="jDO-mK-ftl">
                         <rect key="frame" x="129" y="330" width="163" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
