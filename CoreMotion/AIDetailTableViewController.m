@@ -19,6 +19,10 @@
 {
     [super viewDidLoad];
     self.navigationItem.title = self.title;
+    UIBarButtonItem *refreshItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
+                                                                                 target:self
+                                                                                 action:@selector(cleanMaxAction:)];
+    [self.navigationItem setRightBarButtonItem:refreshItem];
 }
 
 - (void)configurate:(AIMotionType)type
@@ -34,6 +38,10 @@
             
         case AIMotionTypeGravity:
             [self gravity];
+            break;
+            
+        case AIMotionTypeAttitude:
+            [self attitude];
             break;
             
         default:
@@ -83,14 +91,29 @@
     }];
 }
 
+- (void)attitude
+{
+    __weak AIDetailTableViewController *weakSelf = self;
+    [MOTION attitude:^(CMAttitude *attitude, double roll, double pitch, double yaw) {
+        weakSelf.accelX.text = [NSString stringWithFormat:@"%.2f", attitude.roll];
+        weakSelf.accelY.text = [NSString stringWithFormat:@"%.2f", attitude.pitch];
+        weakSelf.accelZ.text = [NSString stringWithFormat:@"%.2f", attitude.yaw];
+        
+        weakSelf.maxAccelX.text = [NSString stringWithFormat:@"%.2f", roll];
+        weakSelf.maxAccelY.text = [NSString stringWithFormat:@"%.2f", pitch];
+        weakSelf.maxAccelZ.text = [NSString stringWithFormat:@"%.2f", yaw];
+    }];
+}
+
 
 #pragma mark - Actions
 
-- (IBAction)cleanMaxAction:(UIBarButtonItem *)sender
+- (void)cleanMaxAction:(UIBarButtonItem *)sender
 {
-//    MOTION.maxAccelX = 0.0f;
-//    MOTION.maxAccelY = 0.0f;
-//    MOTION.maxAccelZ = 0.0f;
+    [MOTION clearMax];
+    self.maxAccelX.text = @"0.0";
+    self.maxAccelY.text = @"0.0";
+    self.maxAccelZ.text = @"0.0";
 }
 
 @end

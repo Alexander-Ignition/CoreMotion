@@ -37,6 +37,6 @@
 - (void)gravity:(void(^)(CMAcceleration gravity, double maxX, double maxY, double maxZ))whitHandler;
 - (void)attitude:(void(^)(CMAttitude *attitude, double roll, double pitch, double yaw))whitHandler;
 
-- (void)cleanMax;
+- (void)clearMax;
 
 @end

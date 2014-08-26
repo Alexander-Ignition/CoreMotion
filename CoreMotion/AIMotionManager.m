@@ -40,7 +40,7 @@ typedef void(^AttitudeBlock)(CMAttitude *attitude, double roll, double pitch, do
 - (instancetype)init
 {
     if (self = [super init]) {
-        [self cleanMax];
+        [self clearMax];
         [self startMonotoring];
     }
     return self;
@@ -167,7 +167,7 @@ typedef void(^AttitudeBlock)(CMAttitude *attitude, double roll, double pitch, do
     }
 }
 
-- (void)cleanMax
+- (void)clearMax
 {
     _maxAccelX = 0.0f;
     _maxAccelX = 0.0f;
