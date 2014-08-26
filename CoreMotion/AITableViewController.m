@@ -37,7 +37,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     AIDetailTableViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
-    [controller configurate:indexPath.row];
+    controller.title = ((UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).textLabel.text;
+    AIMotionType type = indexPath.row;
+    [controller configurate:type];
     [self.navigationController pushViewController:controller animated:YES];
 }
 

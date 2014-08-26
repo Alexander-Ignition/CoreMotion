@@ -28,13 +28,14 @@
 @property (assign, nonatomic, readonly) double maxGravityY;
 @property (assign, nonatomic, readonly) double maxGravityZ;
 
-@property (assign, nonatomic, readonly) double maxAttitudeX;
-@property (assign, nonatomic, readonly) double maxAttitudeY;
-@property (assign, nonatomic, readonly) double maxAttitudeZ;
+@property (assign, nonatomic, readonly) double maxAttitudeRoll;
+@property (assign, nonatomic, readonly) double maxAttitudePitch;
+@property (assign, nonatomic, readonly) double maxAttitudeYaw;
 
 - (void)acceleration:(void(^)(CMAcceleration acceleration, double maxX, double maxY, double maxZ))whitHandler;
 - (void)rotation:(void(^)(CMRotationRate rotation, double maxX, double maxY, double maxZ))whitHandler;
 - (void)gravity:(void(^)(CMAcceleration gravity, double maxX, double maxY, double maxZ))whitHandler;
+- (void)attitude:(void(^)(CMAttitude *attitude, double roll, double pitch, double yaw))whitHandler;
 
 - (void)cleanMax;
 

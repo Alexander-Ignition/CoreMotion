@@ -11,7 +11,8 @@
 typedef NS_ENUM(NSInteger, AIMotionType) {
     AIMotionTypeAcceleration,
     AIMotionTypeRotation,
-    AIMotionTypeGravity
+    AIMotionTypeGravity,
+    AIMotionTypeAttitude
 };
 
 @interface AIDetailTableViewController : UITableViewController

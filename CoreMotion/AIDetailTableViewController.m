@@ -18,6 +18,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.navigationItem.title = self.title;
 }
 
 - (void)configurate:(AIMotionType)type
@@ -42,7 +43,6 @@
 
 - (void)acceleration
 {
-    self.navigationItem.title = @"Acceleration";
     __weak AIDetailTableViewController *weakSelf = self;
     [MOTION acceleration:^(CMAcceleration acceleration, double maxX, double maxY, double maxZ) {
         weakSelf.accelX.text = [NSString stringWithFormat:@"%.2f", acceleration.x];
@@ -57,7 +57,6 @@
 
 - (void)rotation
 {
-    self.navigationItem.title = @"Rotation";
     __weak AIDetailTableViewController *weakSelf = self;
     [MOTION rotation:^(CMRotationRate rotation, double maxX, double maxY, double maxZ) {
         weakSelf.accelX.text = [NSString stringWithFormat:@"%.2f", rotation.x];
@@ -72,7 +71,6 @@
 
 - (void)gravity
 {
-    self.navigationItem.title = @"Gravity";
     __weak AIDetailTableViewController *weakSelf = self;
     [MOTION gravity:^(CMAcceleration gravity, double maxX, double maxY, double maxZ) {
         weakSelf.accelX.text = [NSString stringWithFormat:@"%.2f", gravity.x];

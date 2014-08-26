@@ -8,10 +8,10 @@
 
 #import "AIMotionManager.h"
 
-
 typedef void(^AccelerationBlock)(CMAcceleration acceleration, double maxX, double maxY, double maxZ);
 typedef void(^RotationBlock)(CMRotationRate rotation, double maxX, double maxY, double maxZ);
 typedef void(^GravityBlock)(CMAcceleration gravity, double maxX, double maxY, double maxZ);
+typedef void(^AttitudeBlock)(CMAttitude *attitude, double roll, double pitch, double yaw);
 
 
 @interface AIMotionManager ()
@@ -20,6 +20,7 @@ typedef void(^GravityBlock)(CMAcceleration gravity, double maxX, double maxY, do
 @property (copy, nonatomic) AccelerationBlock accelerationBlock;
 @property (copy, nonatomic) RotationBlock rotationBlock;
 @property (copy, nonatomic) GravityBlock gravityBlock;
+@property (copy, nonatomic) AttitudeBlock attitudeBlock;
 
 @end
 
@@ -39,19 +40,7 @@ typedef void(^GravityBlock)(CMAcceleration gravity, double maxX, double maxY, do
 - (instancetype)init
 {
     if (self = [super init]) {
-        
-        _maxAccelX = 0.0f;
-        _maxAccelY = 0.0f;
-        _maxAccelZ = 0.0f;
-        
-        _maxRotationX = 0.0f;
-        _maxRotationY = 0.0f;
-        _maxRotationZ = 0.0f;
-        
-        _maxGravityX = 0.0f;
-        _maxGravityY = 0.0f;
-        _maxGravityZ = 0.0f;
-        
+        [self cleanMax];
         [self startMonotoring];
     }
     return self;
@@ -104,6 +93,11 @@ typedef void(^GravityBlock)(CMAcceleration gravity, double maxX, double maxY, do
 - (void)gravity:(void(^)(CMAcceleration gravity, double maxX, double maxY, double maxZ))whitHandler
 {
     self.gravityBlock = whitHandler;
+}
+
+- (void)attitude:(void(^)(CMAttitude *attitude, double roll, double pitch, double yaw))whitHandler
+{
+    self.attitudeBlock = whitHandler;
 }
 
 
@@ -159,25 +153,37 @@ typedef void(^GravityBlock)(CMAcceleration gravity, double maxX, double maxY, do
 
 - (void)outputAttitudeData:(CMAttitude *)attitude
 {
-//    if(fabs(attitude.x) > fabs(self.maxRotationX)) {
-//        _maxGravityX = gravity.x;
-//    }
-//    if(fabs(attitude.y) > fabs(self.maxRotationY)) {
-//        _maxGravityY = gravity.y;
-//    }
-//    if(fabs(attitude.z) > fabs(self.maxRotationZ)) {
-//        _maxGravityZ = gravity.z;
-//    }
-//    if (self.gravityBlock) {
-//        self.gravityBlock(gravity, self.maxGravityX, self.maxAccelY, self.maxAccelZ);
-//    }
+    if(fabs(attitude.roll) > fabs(self.maxAttitudeRoll)) {
+        _maxAttitudeRoll = attitude.roll;
+    }
+    if(fabs(attitude.pitch) > fabs(self.maxAttitudePitch)) {
+        _maxAttitudePitch = attitude.pitch;
+    }
+    if(fabs(attitude.yaw) > fabs(self.maxAttitudeYaw)) {
+        _maxAttitudeYaw = attitude.yaw;
+    }
+    if (self.attitudeBlock) {
+        self.attitudeBlock(attitude, self.maxAttitudeRoll, self.maxAttitudePitch, self.maxAttitudeYaw);
+    }
 }
 
 - (void)cleanMax
 {
-//    self.maxAccelX = 0.0f;
-//    self.maxAccelX = 0.0f;
-//    self.maxAccelX = 0.0f;
+    _maxAccelX = 0.0f;
+    _maxAccelX = 0.0f;
+    _maxAccelX = 0.0f;
+    
+    _maxRotationX = 0.0f;
+    _maxRotationY = 0.0f;
+    _maxRotationZ = 0.0f;
+    
+    _maxGravityX = 0.0f;
+    _maxGravityY = 0.0f;
+    _maxGravityZ = 0.0f;
+    
+    _maxAttitudeRoll = 0.0f;
+    _maxAttitudePitch = 0.0f;
+    _maxAttitudeYaw = 0.0f;
 }
 
 @end
