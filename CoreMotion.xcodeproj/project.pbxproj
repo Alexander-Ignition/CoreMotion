@@ -24,6 +24,7 @@
 		04B205C21928A860009F9D10 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04B205C11928A860009F9D10 /* CoreMotion.framework */; };
 		11172F991930645E00E86C07 /* AIMotionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 11172F981930645E00E86C07 /* AIMotionManager.m */; };
 		113297EB1949CBEE00E73CE4 /* AIAccelTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 113297EA1949CBEE00E73CE4 /* AIAccelTableViewController.m */; };
+		3256FF2819AC96D900D2927B /* AIDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3256FF2719AC96D900D2927B /* AIDetailTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,8 @@
 		11172F981930645E00E86C07 /* AIMotionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIMotionManager.m; sourceTree = "<group>"; };
 		113297E91949CBEE00E73CE4 /* AIAccelTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIAccelTableViewController.h; sourceTree = "<group>"; };
 		113297EA1949CBEE00E73CE4 /* AIAccelTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIAccelTableViewController.m; sourceTree = "<group>"; };
+		3256FF2619AC96D900D2927B /* AIDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIDetailTableViewController.h; sourceTree = "<group>"; };
+		3256FF2719AC96D900D2927B /* AIDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIDetailTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,8 +132,7 @@
 				11172F981930645E00E86C07 /* AIMotionManager.m */,
 				04B205BE1928A3B4009F9D10 /* AITableViewController.h */,
 				04B205BF1928A3B4009F9D10 /* AITableViewController.m */,
-				113297E91949CBEE00E73CE4 /* AIAccelTableViewController.h */,
-				113297EA1949CBEE00E73CE4 /* AIAccelTableViewController.m */,
+				3256FF2919AC977600D2927B /* Detail */,
 				04B205A11928A39A009F9D10 /* Images.xcassets */,
 				04B205901928A39A009F9D10 /* Supporting Files */,
 			);
@@ -164,6 +166,17 @@
 				04B205B11928A39A009F9D10 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3256FF2919AC977600D2927B /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				3256FF2619AC96D900D2927B /* AIDetailTableViewController.h */,
+				3256FF2719AC96D900D2927B /* AIDetailTableViewController.m */,
+				113297E91949CBEE00E73CE4 /* AIAccelTableViewController.h */,
+				113297EA1949CBEE00E73CE4 /* AIAccelTableViewController.m */,
+			);
+			name = Detail;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,6 +282,7 @@
 			files = (
 				113297EB1949CBEE00E73CE4 /* AIAccelTableViewController.m in Sources */,
 				04B2059A1928A39A009F9D10 /* AIAppDelegate.m in Sources */,
+				3256FF2819AC96D900D2927B /* AIDetailTableViewController.m in Sources */,
 				04B205961928A39A009F9D10 /* main.m in Sources */,
 				04B205C01928A3B4009F9D10 /* AITableViewController.m in Sources */,
 				11172F991930645E00E86C07 /* AIMotionManager.m in Sources */,

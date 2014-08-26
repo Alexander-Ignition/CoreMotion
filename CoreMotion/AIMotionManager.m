@@ -6,30 +6,20 @@
 //  Copyright (c) 2014 Alexander Ignition. All rights reserved.
 //
 
-
 #import "AIMotionManager.h"
-#import <CoreMotion/CoreMotion.h>
+
+
+typedef void(^AccelerationBlock)(CMAcceleration acceleration, double maxX, double maxY, double maxZ);
+typedef void(^RotationBlock)(CMRotationRate rotation, double maxX, double maxY, double maxZ);
+typedef void(^GravityBlock)(CMAcceleration gravity, double maxX, double maxY, double maxZ);
 
 
 @interface AIMotionManager ()
 
-@property (assign, nonatomic) double currentMaxAccelX;
-@property (assign, nonatomic) double currentMaxAccelY;
-@property (assign, nonatomic) double currentMaxAccelZ;
-
-@property (assign, nonatomic) double currentMaxRotX;
-@property (assign, nonatomic) double currentMaxRotY;
-@property (assign, nonatomic) double currentMaxRotZ;
-
-@property (assign, nonatomic) double currentMaxGravX;
-@property (assign, nonatomic) double currentMaxGravY;
-@property (assign, nonatomic) double currentMaxGravZ;
-
-@property (assign, nonatomic) double currentMaxAttX;
-@property (assign, nonatomic) double currentMaxAttY;
-@property (assign, nonatomic) double currentMaxAttZ;
-
 @property (strong, nonatomic) CMMotionManager *motionManager;
+@property (copy, nonatomic) AccelerationBlock accelerationBlock;
+@property (copy, nonatomic) RotationBlock rotationBlock;
+@property (copy, nonatomic) GravityBlock gravityBlock;
 
 @end
 
@@ -46,39 +36,74 @@
     return manager;
 }
 
-- (id)init
+- (instancetype)init
 {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         
-        self.currentMaxAccelX = 0;
-        self.currentMaxAccelY = 0;
-        self.currentMaxAccelZ = 0;
+        _maxAccelX = 0.0f;
+        _maxAccelY = 0.0f;
+        _maxAccelZ = 0.0f;
         
-        self.currentMaxRotX = 0;
-        self.currentMaxRotY = 0;
-        self.currentMaxRotZ = 0;
+        _maxRotationX = 0.0f;
+        _maxRotationY = 0.0f;
+        _maxRotationZ = 0.0f;
         
-        self.motionManager = [[CMMotionManager alloc] init];
-        self.motionManager.accelerometerUpdateInterval = .2;
-        self.motionManager.gyroUpdateInterval = .2;
+        _maxGravityX = 0.0f;
+        _maxGravityY = 0.0f;
+        _maxGravityZ = 0.0f;
         
-        if (self.motionManager.isDeviceMotionAvailable) {
-            
-            self.motionManager.deviceMotionUpdateInterval = 1.0/2.0;
-            
-            [self.motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMDeviceMotion *motion, NSError *error) {
-                
-                [self outputAccelertionData:motion.userAcceleration];
-                [self outputRotationData:motion.rotationRate];
-                if(error){
-                    NSLog(@"%@", error);
-                }
-            }];
-        }
-
+        [self startMonotoring];
     }
     return self;
+}
+
+
+#pragma mark - Getters
+
+- (CMMotionManager *)motionManager
+{
+    if (_motionManager) {
+        return _motionManager;
+    }
+    _motionManager = [[CMMotionManager alloc] init];
+    _motionManager.accelerometerUpdateInterval = 0.2f;
+    _motionManager.gyroUpdateInterval = 0.2f;
+    return _motionManager;
+}
+
+
+#pragma mark -
+
+- (void)startMonotoring
+{
+    if (self.motionManager.isDeviceMotionAvailable) {
+        self.motionManager.deviceMotionUpdateInterval = 1.0f;
+        [self.motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMDeviceMotion *motion, NSError *error) {
+            if (error) {
+                NSLog(@"%@", error);
+            } else {
+                [self outputAccelertionData:motion.userAcceleration];
+                [self outputRotationData:motion.rotationRate];
+                [self outputGravityData:motion.gravity];
+                [self outputAttitudeData:motion.attitude];
+            }
+        }];
+    }
+}
+
+- (void)acceleration:(void(^)(CMAcceleration acceleration, double maxX, double maxY, double maxZ))whitHandler
+{
+    self.accelerationBlock = whitHandler;
+}
+
+- (void)rotation:(void(^)(CMRotationRate rotation, double maxX, double maxY, double maxZ))whitHandler
+{
+    self.rotationBlock = whitHandler;
+}
+
+- (void)gravity:(void(^)(CMAcceleration gravity, double maxX, double maxY, double maxZ))whitHandler
+{
+    self.gravityBlock = whitHandler;
 }
 
 
@@ -86,62 +111,73 @@
 
 - (void)outputAccelertionData:(CMAcceleration)acceleration
 {
-    self.accX = acceleration.x;
-    if(fabs(acceleration.x) > fabs(self.currentMaxAccelX)) {
-        self.currentMaxAccelX = acceleration.x;
+    if(fabs(acceleration.x) > fabs(self.maxAccelX)) {
+        _maxAccelX = acceleration.x;
     }
-    self.accY = acceleration.y;
-    if(fabs(acceleration.y) > fabs(self.currentMaxAccelY)) {
-        self.currentMaxAccelY = acceleration.y;
+    if(fabs(acceleration.y) > fabs(self.maxAccelY)) {
+        _maxAccelY = acceleration.y;
     }
-    self.accZ = acceleration.z;
-    if(fabs(acceleration.z) > fabs(self.currentMaxAccelZ)) {
-        self.currentMaxAccelZ = acceleration.z;
+    if(fabs(acceleration.z) > fabs(self.maxAccelZ)) {
+        _maxAccelZ = acceleration.z;
     }
-    
-    self.maxAccX = self.currentMaxAccelX;
-    self.maxAccY = self.currentMaxAccelY;
-    self.maxAccZ = self.currentMaxAccelZ;
+    if (self.accelerationBlock) {
+        self.accelerationBlock(acceleration, self.maxAccelX, self.maxAccelY, self.maxAccelZ);
+    }
 }
 
 - (void)outputRotationData:(CMRotationRate)rotation
 {
-    self.rotX = rotation.x;
-    if(fabs(rotation.x) > fabs(self.currentMaxRotX)) {
-        self.currentMaxRotX = rotation.x;
+    if(fabs(rotation.x) > fabs(self.maxRotationX)) {
+        _maxRotationX = rotation.x;
     }
-    self.rotY = rotation.y;
-    if(fabs(rotation.y) > fabs(self.currentMaxRotY)) {
-        self.currentMaxRotY = rotation.y;
+    if(fabs(rotation.y) > fabs(self.maxRotationY)) {
+        _maxRotationY = rotation.y;
     }
-    self.rotZ = rotation.z;
-    if(fabs(rotation.z) > fabs(self.currentMaxRotZ)) {
-        self.currentMaxRotZ = rotation.z;
+    if(fabs(rotation.z) > fabs(self.maxRotationZ)) {
+        _maxRotationZ = rotation.z;
     }
-    
-    self.maxRotX = self.currentMaxRotX;
-    self.maxRotY = self.currentMaxRotY;
-    self.maxRotZ = self.currentMaxRotZ;
+    if (self.rotationBlock) {
+        self.rotationBlock(rotation, self.maxRotationX, self.maxRotationY, self.maxRotationZ);
+    }
 }
 
-- (void)outputData:(CMRotationRate)rotation
+- (void)outputGravityData:(CMAcceleration)gravity
 {
-    self.gravX = rotation.x;
-    if(fabs(rotation.x) > fabs(self.currentMaxGravX)) {
-        self.currentMaxGravX = rotation.x;
+    if(fabs(gravity.x) > fabs(self.maxRotationX)) {
+        _maxGravityX = gravity.x;
     }
-    self.gravY = rotation.y;
-    if(fabs(rotation.y) > fabs(self.currentMaxGravY)) {
-        self.currentMaxGravY = rotation.y;
+    if(fabs(gravity.y) > fabs(self.maxRotationY)) {
+        _maxGravityY = gravity.y;
     }
-    self.gravZ = rotation.z;
-    if(fabs(rotation.z) > fabs(self.currentMaxGravZ)) {
-        self.currentMaxGravZ = rotation.z;
+    if(fabs(gravity.z) > fabs(self.maxRotationZ)) {
+        _maxGravityZ = gravity.z;
     }
-    
-    self.maxGravX = self.currentMaxGravX;
-    self.maxGravY = self.currentMaxGravY;
-    self.maxGravZ = self.currentMaxGravZ;
+    if (self.gravityBlock) {
+        self.gravityBlock(gravity, self.maxGravityX, self.maxAccelY, self.maxAccelZ);
+    }
+}
+
+- (void)outputAttitudeData:(CMAttitude *)attitude
+{
+//    if(fabs(attitude.x) > fabs(self.maxRotationX)) {
+//        _maxGravityX = gravity.x;
+//    }
+//    if(fabs(attitude.y) > fabs(self.maxRotationY)) {
+//        _maxGravityY = gravity.y;
+//    }
+//    if(fabs(attitude.z) > fabs(self.maxRotationZ)) {
+//        _maxGravityZ = gravity.z;
+//    }
+//    if (self.gravityBlock) {
+//        self.gravityBlock(gravity, self.maxGravityX, self.maxAccelY, self.maxAccelZ);
+//    }
+}
+
+- (void)cleanMax
+{
+//    self.maxAccelX = 0.0f;
+//    self.maxAccelX = 0.0f;
+//    self.maxAccelX = 0.0f;
 }
 
 @end

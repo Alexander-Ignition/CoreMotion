@@ -6,44 +6,36 @@
 //  Copyright (c) 2014 Alexander Ignition. All rights reserved.
 //
 
-
 #import <Foundation/Foundation.h>
+#import <CoreMotion/CoreMotion.h>
+
+#define MOTION [AIMotionManager sharedManager]
 
 
 @interface AIMotionManager : NSObject
 
 + (AIMotionManager *)sharedManager;
 
-@property (assign, nonatomic) double accX;
-@property (assign, nonatomic) double accY;
-@property (assign, nonatomic) double accZ;
+@property (assign, nonatomic, readonly) double maxAccelX;
+@property (assign, nonatomic, readonly) double maxAccelY;
+@property (assign, nonatomic, readonly) double maxAccelZ;
 
-@property (assign, nonatomic) double maxAccX;
-@property (assign, nonatomic) double maxAccY;
-@property (assign, nonatomic) double maxAccZ;
+@property (assign, nonatomic, readonly) double maxRotationX;
+@property (assign, nonatomic, readonly) double maxRotationY;
+@property (assign, nonatomic, readonly) double maxRotationZ;
 
-@property (assign, nonatomic) double rotX;
-@property (assign, nonatomic) double rotY;
-@property (assign, nonatomic) double rotZ;
+@property (assign, nonatomic, readonly) double maxGravityX;
+@property (assign, nonatomic, readonly) double maxGravityY;
+@property (assign, nonatomic, readonly) double maxGravityZ;
 
-@property (assign, nonatomic) double maxRotX;
-@property (assign, nonatomic) double maxRotY;
-@property (assign, nonatomic) double maxRotZ;
+@property (assign, nonatomic, readonly) double maxAttitudeX;
+@property (assign, nonatomic, readonly) double maxAttitudeY;
+@property (assign, nonatomic, readonly) double maxAttitudeZ;
 
-@property (assign, nonatomic) double gravX;
-@property (assign, nonatomic) double gravY;
-@property (assign, nonatomic) double gravZ;
+- (void)acceleration:(void(^)(CMAcceleration acceleration, double maxX, double maxY, double maxZ))whitHandler;
+- (void)rotation:(void(^)(CMRotationRate rotation, double maxX, double maxY, double maxZ))whitHandler;
+- (void)gravity:(void(^)(CMAcceleration gravity, double maxX, double maxY, double maxZ))whitHandler;
 
-@property (assign, nonatomic) double maxGravX;
-@property (assign, nonatomic) double maxGravY;
-@property (assign, nonatomic) double maxGravZ;
-
-@property (assign, nonatomic) double attX;
-@property (assign, nonatomic) double attY;
-@property (assign, nonatomic) double attZ;
-
-@property (assign, nonatomic) double maxAttX;
-@property (assign, nonatomic) double maxAttY;
-@property (assign, nonatomic) double maxAttZ;
+- (void)cleanMax;
 
 @end
