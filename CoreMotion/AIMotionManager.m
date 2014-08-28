@@ -8,6 +8,7 @@
 
 #import "AIMotionManager.h"
 
+
 typedef void(^AccelerationBlock)(CMAcceleration acceleration, double maxX, double maxY, double maxZ);
 typedef void(^RotationBlock)(CMRotationRate rotation, double maxX, double maxY, double maxZ);
 typedef void(^GravityBlock)(CMAcceleration gravity, double maxX, double maxY, double maxZ);
