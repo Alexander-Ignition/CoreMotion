@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 #import <CoreMotion/CoreMotion.h>
 
-#define MOTION [AIMotionManager sharedManager]
-
+typedef void(^AccelerationBlock)(CMAcceleration acceleration, double maxX, double maxY, double maxZ);
+typedef void(^RotationBlock)(CMRotationRate rotation, double maxX, double maxY, double maxZ);
+typedef void(^GravityBlock)(CMAcceleration gravity, double maxX, double maxY, double maxZ);
+typedef void(^AttitudeBlock)(CMAttitude *attitude, double roll, double pitch, double yaw);
 
 @interface AIMotionManager : NSObject
 
-+ (AIMotionManager *)sharedManager;
+@property (strong, nonatomic, readonly) CMMotionManager *motionManager;
 
 @property (assign, nonatomic, readonly) double maxAccelX;
 @property (assign, nonatomic, readonly) double maxAccelY;
@@ -32,10 +34,12 @@
 @property (assign, nonatomic, readonly) double maxAttitudePitch;
 @property (assign, nonatomic, readonly) double maxAttitudeYaw;
 
-- (void)acceleration:(void(^)(CMAcceleration acceleration, double maxX, double maxY, double maxZ))whitHandler;
-- (void)rotation:(void(^)(CMRotationRate rotation, double maxX, double maxY, double maxZ))whitHandler;
-- (void)gravity:(void(^)(CMAcceleration gravity, double maxX, double maxY, double maxZ))whitHandler;
-- (void)attitude:(void(^)(CMAttitude *attitude, double roll, double pitch, double yaw))whitHandler;
++ (instancetype)sharedManager;
+
+- (void)setAccelerationHandler:(AccelerationBlock)handler;
+- (void)setRotationHandler:(RotationBlock)handler;
+- (void)setGravityHandler:(GravityBlock)handler;
+- (void)setAttitudeHandler:(AttitudeBlock)handler;
 
 - (void)clearMax;
 

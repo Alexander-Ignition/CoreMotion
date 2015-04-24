@@ -8,26 +8,15 @@
 
 #import "AITableViewController.h"
 #import "AIDetailTableViewController.h"
-
+#import "AIMotionManager.h"
 
 @interface AITableViewController ()
 
-@property (assign, nonatomic) double currentMaxAccelX;
-@property (assign, nonatomic) double currentMaxAccelY;
-@property (assign, nonatomic) double currentMaxAccelZ;
-@property (assign, nonatomic) double currentMaxRotX;
-@property (assign, nonatomic) double currentMaxRotY;
-@property (assign, nonatomic) double currentMaxRotZ;
-
-@property (strong, nonatomic) CMMotionManager *motionManager;
-
 @end
-
 
 @implementation AITableViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 }
 
@@ -37,9 +26,13 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     AIDetailTableViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
+    
     controller.title = ((UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).textLabel.text;
+    
     AIMotionType type = indexPath.row;
-    [controller configurate:type];
+    
+    [controller motionManager:[AIMotionManager sharedManager] configurate:type];
+    
     [self.navigationController pushViewController:controller animated:YES];
 }
 

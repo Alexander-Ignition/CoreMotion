@@ -11,6 +11,16 @@
 
 @interface AIDetailTableViewController ()
 
+@property (strong, nonatomic) AIMotionManager *motionManager;
+
+@property (weak, nonatomic) IBOutlet UILabel *accelX;
+@property (weak, nonatomic) IBOutlet UILabel *accelY;
+@property (weak, nonatomic) IBOutlet UILabel *accelZ;
+
+@property (weak, nonatomic) IBOutlet UILabel *maxAccelX;
+@property (weak, nonatomic) IBOutlet UILabel *maxAccelY;
+@property (weak, nonatomic) IBOutlet UILabel *maxAccelZ;
+
 @end
 
 @implementation AIDetailTableViewController
@@ -18,16 +28,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.title = self.title;
-    UIBarButtonItem *refreshItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
-                                                                                 target:self
-                                                                                 action:@selector(cleanMaxAction:)];
-    [self.navigationItem setRightBarButtonItem:refreshItem];
+    
+    self.navigationItem.rightBarButtonItem =
+    [[UIBarButtonItem alloc]
+     initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
+     target:self
+     action:@selector(cleanMaxAction:)];;
 }
 
-- (void)configurate:(AIMotionType)type
+- (void)motionManager:(AIMotionManager *)manager
+          configurate:(AIMotionType)type
 {
+    self.motionManager = manager;
     switch (type) {
+            
         case AIMotionTypeAcceleration:
             [self acceleration];
             break;
@@ -49,68 +63,55 @@
     }
 }
 
-- (void)acceleration
-{
+- (void)acceleration {
     __weak AIDetailTableViewController *weakSelf = self;
-    [MOTION acceleration:^(CMAcceleration acceleration, double maxX, double maxY, double maxZ) {
-        weakSelf.accelX.text = [NSString stringWithFormat:@"%.2f", acceleration.x];
-        weakSelf.accelY.text = [NSString stringWithFormat:@"%.2f", acceleration.y];
-        weakSelf.accelZ.text = [NSString stringWithFormat:@"%.2f", acceleration.z];
-        
-        weakSelf.maxAccelX.text = [NSString stringWithFormat:@"%.2f", maxX];
-        weakSelf.maxAccelY.text = [NSString stringWithFormat:@"%.2f", maxY];
-        weakSelf.maxAccelZ.text = [NSString stringWithFormat:@"%.2f", maxZ];
+    [self.motionManager setAccelerationHandler:^(CMAcceleration acceleration, double maxX, double maxY, double maxZ) {
+        [weakSelf currentX:acceleration.x currentY:acceleration.y currentZ:acceleration.y maxX:maxX maxY:maxX maxZ:maxX];
     }];
 }
 
-- (void)rotation
-{
+- (void)rotation {
     __weak AIDetailTableViewController *weakSelf = self;
-    [MOTION rotation:^(CMRotationRate rotation, double maxX, double maxY, double maxZ) {
-        weakSelf.accelX.text = [NSString stringWithFormat:@"%.2f", rotation.x];
-        weakSelf.accelY.text = [NSString stringWithFormat:@"%.2f", rotation.y];
-        weakSelf.accelZ.text = [NSString stringWithFormat:@"%.2f", rotation.z];
-        
-        weakSelf.maxAccelX.text = [NSString stringWithFormat:@"%.2f", maxX];
-        weakSelf.maxAccelY.text = [NSString stringWithFormat:@"%.2f", maxY];
-        weakSelf.maxAccelZ.text = [NSString stringWithFormat:@"%.2f", maxZ];
+    [self.motionManager setRotationHandler:^(CMRotationRate rotation, double maxX, double maxY, double maxZ) {
+        [weakSelf currentX:rotation.x currentY:rotation.y currentZ:rotation.y maxX:maxX maxY:maxX maxZ:maxX];
     }];
 }
 
-- (void)gravity
-{
+- (void)gravity {
     __weak AIDetailTableViewController *weakSelf = self;
-    [MOTION gravity:^(CMAcceleration gravity, double maxX, double maxY, double maxZ) {
-        weakSelf.accelX.text = [NSString stringWithFormat:@"%.2f", gravity.x];
-        weakSelf.accelY.text = [NSString stringWithFormat:@"%.2f", gravity.y];
-        weakSelf.accelZ.text = [NSString stringWithFormat:@"%.2f", gravity.z];
-        
-        weakSelf.maxAccelX.text = [NSString stringWithFormat:@"%.2f", maxX];
-        weakSelf.maxAccelY.text = [NSString stringWithFormat:@"%.2f", maxY];
-        weakSelf.maxAccelZ.text = [NSString stringWithFormat:@"%.2f", maxZ];
+    [self.motionManager setGravityHandler:^(CMAcceleration gravity, double maxX, double maxY, double maxZ) {
+        [weakSelf currentX:gravity.x currentY:gravity.y currentZ:gravity.y maxX:maxX maxY:maxX maxZ:maxX];
     }];
 }
 
-- (void)attitude
-{
+- (void)attitude {
     __weak AIDetailTableViewController *weakSelf = self;
-    [MOTION attitude:^(CMAttitude *attitude, double roll, double pitch, double yaw) {
-        weakSelf.accelX.text = [NSString stringWithFormat:@"%.2f", attitude.roll];
-        weakSelf.accelY.text = [NSString stringWithFormat:@"%.2f", attitude.pitch];
-        weakSelf.accelZ.text = [NSString stringWithFormat:@"%.2f", attitude.yaw];
-        
-        weakSelf.maxAccelX.text = [NSString stringWithFormat:@"%.2f", roll];
-        weakSelf.maxAccelY.text = [NSString stringWithFormat:@"%.2f", pitch];
-        weakSelf.maxAccelZ.text = [NSString stringWithFormat:@"%.2f", yaw];
+    [self.motionManager setAttitudeHandler:^(CMAttitude *attitude, double roll, double pitch, double yaw) {
+        [weakSelf currentX:attitude.roll currentY:attitude.pitch currentZ:attitude.yaw maxX:roll maxY:pitch maxZ:yaw];
     }];
+}
+
+- (void)currentX:(double)currentX
+        currentY:(double)currentY
+        currentZ:(double)currentZ
+            maxX:(double)maxX
+            maxY:(double)maxY
+            maxZ:(double)maxZ
+{
+    self.accelX.text = [NSString stringWithFormat:@"%.2f", currentX];
+    self.accelY.text = [NSString stringWithFormat:@"%.2f", currentY];
+    self.accelZ.text = [NSString stringWithFormat:@"%.2f", currentZ];
+    
+    self.maxAccelX.text = [NSString stringWithFormat:@"%.2f", maxX];
+    self.maxAccelY.text = [NSString stringWithFormat:@"%.2f", maxY];
+    self.maxAccelZ.text = [NSString stringWithFormat:@"%.2f", maxZ];
 }
 
 
 #pragma mark - Actions
 
-- (void)cleanMaxAction:(UIBarButtonItem *)sender
-{
-    [MOTION clearMax];
+- (void)cleanMaxAction:(UIBarButtonItem *)sender {
+    [self.motionManager clearMax];
     self.maxAccelX.text = @"0.0";
     self.maxAccelY.text = @"0.0";
     self.maxAccelZ.text = @"0.0";

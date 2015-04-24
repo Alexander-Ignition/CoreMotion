@@ -6,8 +6,7 @@
 //  Copyright (c) 2014 Alexander Ignition. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <CoreMotion/CoreMotion.h>
+@import UIKit;
 
 @interface AITableViewController : UITableViewController
 

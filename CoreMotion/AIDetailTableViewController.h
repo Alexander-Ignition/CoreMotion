@@ -6,7 +6,9 @@
 //  Copyright (c) 2014 Alexander Ignition. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+
+@class AIMotionManager;
 
 typedef NS_ENUM(NSInteger, AIMotionType) {
     AIMotionTypeAcceleration,
@@ -17,16 +19,7 @@ typedef NS_ENUM(NSInteger, AIMotionType) {
 
 @interface AIDetailTableViewController : UITableViewController
 
-@property (strong, nonatomic) NSString *title;
-
-@property (weak, nonatomic) IBOutlet UILabel *accelX;
-@property (weak, nonatomic) IBOutlet UILabel *accelY;
-@property (weak, nonatomic) IBOutlet UILabel *accelZ;
-
-@property (weak, nonatomic) IBOutlet UILabel *maxAccelX;
-@property (weak, nonatomic) IBOutlet UILabel *maxAccelY;
-@property (weak, nonatomic) IBOutlet UILabel *maxAccelZ;
-
-- (void)configurate:(AIMotionType)type;
+- (void)motionManager:(AIMotionManager *)manager
+          configurate:(AIMotionType)type;
 
 @end

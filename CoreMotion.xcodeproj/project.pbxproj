@@ -214,9 +214,6 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Alexander Ignition";
 				TargetAttributes = {
-					04B205851928A39A009F9D10 = {
-						DevelopmentTeam = QM3357L793;
-					};
 					04B205A61928A39A009F9D10 = {
 						TestTargetID = 04B205851928A39A009F9D10;
 					};
